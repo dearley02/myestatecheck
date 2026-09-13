@@ -27,7 +27,9 @@
   .id-row { display:flex; align-items:center; gap:12px; }
   .brand { font-family:var(--serif); font-weight:600; font-size:19px; color:var(--ink); letter-spacing:-0.01em; }
   .tagline { font-size:13px; color:var(--slate); margin-top:2px; }
-  .chips { display:flex; gap:16px; flex-wrap:wrap; font-size:12.5px; color:var(--slate); row-gap:4px; }
+  .chips { display:flex; flex-wrap:wrap; font-size:12.5px; color:var(--slate); gap:0 14px; row-gap:4px; }
+  .chips span { display:inline-flex; align-items:center; }
+  .chips span + span::before { content:""; display:inline-block; width:3px; height:3px; border-radius:50%; background:var(--line); margin-right:14px; flex-shrink:0; }
   .wrap { width:min(680px,92vw); margin:0 auto; padding:28px 0 60px; }
   .hero { margin-bottom:28px; }
   h1 { font-family:var(--serif); font-weight:600; font-size:clamp(24px,5.2vw,32px); line-height:1.28; margin:0 0 12px; color:var(--ink); letter-spacing:-0.01em; max-width:19ch; }
@@ -232,7 +234,7 @@
 
   <footer>
     <div id="footerContact"></div>
-    <p>This check is general information about California law and is not legal advice for your situation. Fees shown are the flat fees for the packages described; other work is quoted separately.</p>
+    <p>This check is general information about California law, not legal advice for your situation, and no attorney has reviewed your answers. Using it creates no attorney-client relationship. Statutory probate figures reflect California Probate Code sections 10800 and 10810 as of September 2026.</p>
   </footer>
 </div>
 
@@ -245,8 +247,8 @@
     function feeOneSide(g){ var f=0,r=g,b=[[100000,0.04],[100000,0.03],[800000,0.02],[9000000,0.01],[15000000,0.005]]; for(var i=0;i<b.length&&r>0;i++){var t=Math.min(r,b[i][0]); f+=t*b[i][1]; r-=t;} return f; }
     function isCourtDetermined(g){ return g>25000000; }
     function feeDisplay(g){ return isCourtDetermined(g) ? "Court-determined (over $25M)" : money(feeOneSide(g)*2); }
-    $("submitPrivacy").textContent = CONFIG.formEndpoint ? "Submitting sends your answers to our intake form so we can prepare for the call. No lists, no resale." : (CONFIG.email ? "Submitting opens an email to "+CONFIG.email+" with your answers. No lists, no resale." : "Submitting shows you a copy of your answers to send us yourself. Nothing leaves this page until you do.");
-    if (CONFIG.phone||CONFIG.email){ $("footerContact").textContent=(CONFIG.phone?"Call or text "+CONFIG.phone.replace(/(\d{3})(\d{3})(\d{4})/,"($1) $2-$3"):"")+(CONFIG.phone&&CONFIG.email?" or ":"")+(CONFIG.email?"email "+CONFIG.email:""); }
+    $("submitPrivacy").textContent = CONFIG.formEndpoint ? "Submitting sends your answers to our intake form so we can prepare for the call. No lists, no resale." : (CONFIG.email ? "Submitting opens your own email app with your answers, addressed to us. No lists, no resale." : "Submitting shows you a copy of your answers to send us yourself. Nothing leaves this page until you do.");
+    if (CONFIG.phone){ $("footerContact").textContent="Call or text "+CONFIG.phone.replace(/(\d{3})(\d{3})(\d{4})/,"($1) $2-$3"); }
 
     var steps=Array.prototype.slice.call(document.querySelectorAll(".step")), cur=0;
     function show(i){ steps.forEach(function(s,k){ s.classList.toggle("active",k===i); }); cur=i;
