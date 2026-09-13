@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Five-minute business and estate check</title>
+<meta name="description" content="Answer twelve questions and see what would happen to your home, your company, and your family if you were out for six months or gone tomorrow. Private, nothing is stored.">
+<style>
+  :root {
+    --ink:#14213D; --paper:#FFFFFF; --line:#DADFE6; --slate:#5B6472; --wash:#F5F6F8;
+    --gold:#A8842C; --good:#1E7F4F; --warn:#B3261E;
+    --serif:"Source Serif 4", Georgia, "Times New Roman", serif;
+    --sans:"IBM Plex Sans", Arial, Helvetica, sans-serif;
+  }
+  * { box-sizing:border-box; }
+  html { -webkit-text-size-adjust:100%; }
+  body { margin:0; font-family:var(--sans); color:var(--ink); background:var(--paper); font-size:16px; line-height:1.55; }
+  a { color:var(--ink); }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, label:focus-within {
+    outline:2px solid var(--gold); outline-offset:2px;
+  }
+  .topbar { border-bottom:1px solid var(--line); }
+  .topbar .in { width:min(680px,92vw); margin:0 auto; display:flex; justify-content:space-between; align-items:center; padding:16px 0; gap:14px; flex-wrap:wrap; }
+  .id-row { display:flex; align-items:center; gap:12px; }
+  .brand { font-family:var(--serif); font-weight:600; font-size:19px; color:var(--ink); letter-spacing:-0.01em; }
+  .tagline { font-size:13px; color:var(--slate); margin-top:2px; }
+  .chips { display:flex; gap:16px; flex-wrap:wrap; font-size:12.5px; color:var(--slate); row-gap:4px; }
+  .wrap { width:min(680px,92vw); margin:0 auto; padding:28px 0 60px; }
+  .hero { margin-bottom:28px; }
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(24px,5.2vw,32px); line-height:1.28; margin:0 0 12px; color:var(--ink); letter-spacing:-0.01em; max-width:19ch; }
+  .lede { color:var(--slate); margin:0; font-size:16px; max-width:58ch; line-height:1.6; }
+  .stepcard { border:1px solid var(--line); border-radius:10px; padding:24px 24px 20px; margin:0; background:var(--paper); }
+  .card { border:0; border-top:1px solid var(--line); border-radius:0; padding:28px 0; margin:0; background:transparent; }
+  .results .card:first-of-type { border-top:0; padding-top:0; }
+  .results .card:last-of-type { border:1px solid var(--line); border-radius:10px; padding:24px 24px 20px; margin-top:6px; background:var(--wash); }
+  .stephead { display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin-bottom:14px; }
+  .stephead .t { font-family:var(--serif); font-size:19px; font-weight:600; color:var(--ink); }
+  .stephead .n { font-size:13px; color:var(--slate); white-space:nowrap; }
+  .segments { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; margin:0 0 22px; }
+  .segments div { height:3px; border-radius:2px; background:var(--line); }
+  .segments div.on { background:var(--gold); }
+  .step { display:none; }
+  .step.active { display:block; }
+  .q { margin:0 0 24px; }
+  .q:last-child { margin-bottom:0; }
+  .q.invalid-q { outline:2px solid var(--warn); outline-offset:8px; border-radius:6px; }
+  #stepErr { display:block !important; min-height:16px; color:var(--warn); font-size:13.5px; margin:0 0 14px; }
+  .q h2 { font-size:16.5px; font-weight:600; margin:0 0 4px; line-height:1.4; }
+  .q p.help { margin:0 0 10px; color:var(--slate); font-size:14px; line-height:1.5; }
+  .opts { display:flex; flex-direction:column; }
+  .opts label {
+    display:flex; align-items:center; gap:12px; padding:12px 4px; cursor:pointer; font-size:15.5px;
+    border-bottom:1px solid var(--line);
+  }
+  .opts label:last-child { border-bottom:0; }
+  .opts input { width:19px; height:19px; margin:0; flex-shrink:0; accent-color:var(--ink); }
+  @media (prefers-reduced-motion: no-preference) { .opts label { transition:background-color 120ms ease; } }
+  .opts label:has(input:checked) { background:rgba(20,33,61,0.045); font-weight:500; }
+  select, input[type=text], input[type=email], input[type=tel], input[type=number] {
+    width:100%; max-width:420px; padding:11px 12px; border:1px solid var(--line); border-radius:6px;
+    font:inherit; font-size:16px; background:var(--paper); color:var(--ink);
+  }
+  .nav { display:flex; justify-content:space-between; gap:10px; margin-top:22px; }
+  button {
+    padding:12px 20px; border-radius:6px; border:1.5px solid var(--ink); background:var(--paper); color:var(--ink);
+    font:inherit; font-size:15.5px; font-weight:600; cursor:pointer;
+  }
+  @media (prefers-reduced-motion: no-preference) { button { transition:background-color 120ms ease, color 120ms ease; } }
+  button.primary { background:var(--ink); color:#fff; }
+  button.primary:hover { background:#0D1830; }
+  button[hidden] { display:none; }
+  .results { display:none; }
+  .results.active { display:block; }
+  .card h2 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0 0 14px; color:var(--ink); }
+  .item { border-left:2px solid var(--gold); padding:4px 0 4px 14px; margin:0 0 16px; font-size:15px; line-height:1.5; }
+  ul.fixlist { margin:0 0 14px; padding-left:20px; }
+  ul.fixlist li { margin:0 0 10px; font-size:15px; line-height:1.55; }
+  .item b { display:block; margin-bottom:2px; font-weight:600; }
+  .good { color:var(--good); }
+  table { border-collapse:collapse; width:100%; font-size:14.5px; margin:8px 0 4px; }
+  th, td { text-align:left; padding:10px 8px; border-bottom:1px solid var(--line); }
+  th { font-weight:600; color:var(--slate); font-size:13px; }
+  .big { font-family:var(--serif); font-size:clamp(28px,7vw,36px); font-weight:600; color:var(--gold); }
+  .fine { font-size:13px; color:var(--slate); line-height:1.55; }
+  form .row { display:grid; grid-template-columns:1fr 1fr; gap:14px 16px; margin-top:16px; }
+  form .full { grid-column:1 / -1; }
+  form label { display:block; font-weight:600; font-size:13.5px; margin-bottom:5px; color:var(--ink); }
+  form label.plain { font-weight:400; font-size:15px; }
+  .err { color:var(--warn); font-size:13px; display:none; margin-top:5px; }
+  .field.invalid input { border-color:var(--warn); } .field.invalid .err { display:block; }
+  .status { margin-top:16px; padding:14px 16px; border-radius:6px; display:none; font-size:15px; }
+  .status.ok { display:block; background:#E7F5EC; color:var(--good); } .status.warn { display:block; background:#FFF4E5; color:#7A4B00; }
+  .status textarea { width:100%; min-height:140px; margin-top:10px; font-size:13px; font-family:Menlo, Consolas, monospace; border:1px solid var(--line); border-radius:6px; padding:10px; }
+  .hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+  footer { margin-top:36px; padding-top:16px; border-top:1px solid var(--line); font-size:13px; color:var(--slate); line-height:1.6; }
+  @media (max-width:640px) {
+    form .row { grid-template-columns:1fr; }
+    .wrap { padding-bottom:110px; }
+    .nav {
+      position:fixed; left:0; right:0; bottom:0; margin:0; z-index:20;
+      background:var(--paper); border-top:1px solid var(--line);
+      padding:12px 5vw calc(12px + env(safe-area-inset-bottom));
+      max-width:680px; margin-left:auto; margin-right:auto;
+    }
+    .stepcard { padding:20px 18px 16px; }
+    .card, .results .card:last-of-type { padding-left:0; padding-right:0; }
+    .results .card:last-of-type { padding:20px 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="topbar"><div class="in"><div class="id-row"><div class="brand" id="firmName">Business &amp; Estate Check</div></div><div class="chips"><span>13 questions</span><span>About 5 minutes</span><span>Not saved unless you submit</span></div></div></div>
+<div class="wrap">
+  <div class="hero">
+    <h1>What happens to your home, your company, and your family if you are out for six months, or gone tomorrow?</h1>
+    <p class="lede">Answer thirteen questions and see what a lawyer would want to look at, and what California's probate court charges when nothing is in place. Your answers live in this page only; nothing is saved or sent anywhere unless you submit the form at the end.</p>
+  </div>
+
+  <div class="stepcard" id="stepcard">
+    <div class="stephead"><div class="t" id="stepTitle"></div><div class="n" id="stepLabel"></div></div>
+    <div class="segments" id="segments"><div></div><div></div><div></div><div></div></div>
+  <p class="err" id="stepErr"></p>
+  <div id="steps">
+    <div class="step active" data-title="Your family">
+      <div class="q" data-group="domicile"><h2>Is California your legal home (domicile), even if you are stationed or living elsewhere right now?</h2><p class="help">This changes which numbers below actually apply to you. Not sure is fine; we will sort it out on the call.</p><div class="opts inline">
+        <label><input type="radio" name="domicile" value="yes"> Yes, California</label><label><input type="radio" name="domicile" value="no"> No, another state</label><label><input type="radio" name="domicile" value="unsure"> Not sure</label></div></div>
+      <div class="q" data-group="marital"><h2>Are you married?</h2><div class="opts inline">
+        <label><input type="radio" name="marital" value="married"> Married</label><label><input type="radio" name="marital" value="single"> Single</label><label><input type="radio" name="marital" value="partnered"> Partnered, not married</label></div></div>
+      <div class="q" data-group="blended"><h2>Has either of you been married before, or do you have children from a previous relationship?</h2><div class="opts inline">
+        <label><input type="radio" name="blended" value="no"> No</label><label><input type="radio" name="blended" value="yes"> Yes</label></div></div>
+      <div class="q" data-group="minors"><h2>Do you have children under 18?</h2><div class="opts inline">
+        <label><input type="radio" name="minors" value="no"> No</label><label><input type="radio" name="minors" value="yes_named"> Yes, and a guardian is named in a signed will</label><label><input type="radio" name="minors" value="yes_none"> Yes, and no guardian is named</label></div></div>
+      <div class="q" data-group="worry"><h2>Is there anyone in your family you would worry about receiving a large sum all at once?</h2><p class="help">A special-needs family member, someone with an addiction or creditor problem, or someone very young.</p><div class="opts inline">
+        <label><input type="radio" name="worry" value="no"> No</label><label><input type="radio" name="worry" value="yes"> Yes</label></div></div>
+    </div>
+
+    <div class="step" data-title="Your home and property">
+      <div class="q" data-group="home"><h2>Do you own your home?</h2><div class="opts inline">
+        <label><input type="radio" name="home" value="yes"> Yes</label><label><input type="radio" name="home" value="no"> No</label></div></div>
+      <div id="homeownedq"><div class="q" id="homevalq" data-group="homeval"><h2>Roughly what is it worth today, before the mortgage?</h2><p class="help">Probate fees are charged on the full value, not the equity.</p>
+        <select id="homeval"><option value="" selected disabled>Select a range</option><option value="400000">Under $500,000</option><option value="750000">$500,000 to $1 million</option><option value="1250000">$1 million to $1.5 million</option><option value="1750000">$1.5 million to $2 million</option><option value="2500000">$2 million to $3 million</option><option value="3500000">Over $3 million</option></select></div>
+      <div class="q" id="titleq" data-group="title"><h2>Is the title to your home held in a living trust?</h2><div class="opts inline">
+        <label><input type="radio" name="title" value="no"> No</label><label><input type="radio" name="title" value="yes"> Yes</label><label><input type="radio" name="title" value="unsure"> Not sure</label></div></div></div>
+      <div class="q" data-group="oos"><h2>Do you own property in another state?</h2><div class="opts inline">
+        <label><input type="radio" name="oos" value="no"> No</label><label><input type="radio" name="oos" value="yes"> Yes</label></div></div>
+    </div>
+
+    <div class="step" data-title="Your company">
+      <div class="q" data-group="biz"><h2>Do you own or co-own a business?</h2><div class="opts inline">
+        <label><input type="radio" name="biz" value="yes"> Yes</label><label><input type="radio" name="biz" value="no"> No</label></div></div>
+      <div id="bizq">
+        <div class="q" data-group="qual"><h2>Is the company's contractor license held under your name as the qualifier?</h2><p class="help">The qualifier is the person the CSLB license is issued through.</p><div class="opts inline">
+          <label><input type="radio" name="qual" value="yes"> Yes</label><label><input type="radio" name="qual" value="no"> No, someone else</label><label><input type="radio" name="qual" value="na"> Not a licensed trade</label></div></div>
+        <div class="q" data-group="buysell"><h2>Is there a signed agreement for what happens to your share if you die or become disabled?</h2><p class="help">Often called a buy-sell agreement.</p><div class="opts inline">
+          <label><input type="radio" name="buysell" value="none"> No</label><label><input type="radio" name="buysell" value="unfunded"> Yes, but no insurance or funds behind it</label><label><input type="radio" name="buysell" value="funded"> Yes, with insurance or funds</label><label><input type="radio" name="buysell" value="sole"> I am the only owner</label></div></div>
+        <div class="q" data-group="runner"><h2>If you could not work for six months, is there someone who could run the company and sign for it?</h2><div class="opts inline">
+          <label><input type="radio" name="runner" value="no"> No, or not sure</label><label><input type="radio" name="runner" value="yes"> Yes</label></div></div>
+        <div class="q" data-group="pg"><h2>Do you personally guarantee bonds, a bank line, or leases for the company?</h2><div class="opts inline">
+          <label><input type="radio" name="pg" value="yes"> Yes</label><label><input type="radio" name="pg" value="no"> No</label><label><input type="radio" name="pg" value="unsure"> Not sure</label></div></div>
+      </div>
+    </div>
+
+    <div class="step" data-title="Accounts and paperwork">
+      <div class="q" data-group="benef"><h2>When did you last check who is named on your life insurance, retirement accounts, and any ESOP or military benefits?</h2><div class="opts inline">
+        <label><input type="radio" name="benef" value="recent"> This year</label><label><input type="radio" name="benef" value="mid"> One to five years ago</label><label><input type="radio" name="benef" value="old"> More than five years ago, or never</label><label><input type="radio" name="benef" value="unsure"> Not sure who is named</label></div></div>
+      <div class="q" data-group="incap"><h2>Do you have a signed California power of attorney and health care directive?</h2><p class="help">The documents that let someone pay your bills, sign for the company, and make medical decisions if you cannot.</p><div class="opts inline">
+        <label><input type="radio" name="incap" value="none"> No</label><label><input type="radio" name="incap" value="some"> One of them</label><label><input type="radio" name="incap" value="both"> Both, from California</label><label><input type="radio" name="incap" value="oos"> Yes, from another state</label></div></div>
+      <div class="q" data-group="plan"><h2>Do you have a will or a living trust today?</h2><div class="opts inline">
+        <label><input type="radio" name="plan" value="none"> Nothing signed</label><label><input type="radio" name="plan" value="will"> A will only</label><label><input type="radio" name="plan" value="trust"> A living trust</label><label><input type="radio" name="plan" value="online"> An online or document-service trust</label></div></div>
+      <div class="q" id="planq"><h2>Since it was signed, has any of this happened?</h2><div class="opts inline">
+        <label><input type="checkbox" id="e_marriage"> Marriage or divorce</label><label><input type="checkbox" id="e_child"> A child born or adopted</label><label><input type="checkbox" id="e_biz"> Started or bought the business</label><label><input type="checkbox" id="e_move"> Moved to California</label><label><input type="checkbox" id="e_ten"> It has been 10 years or more</label></div></div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button type="button" id="back" hidden>Back</button>
+    <button type="button" class="primary" id="next">Next</button>
+  </div>
+  </div>
+
+  <div class="results" id="results">
+    <div class="card">
+      <h2>What a lawyer would want to look at</h2>
+      <div id="items"></div>
+      <p class="fine">This is a self-assessment tool, not a legal review. No attorney has looked at your answers, and this page has not analyzed your specific situation the way a lawyer would. It is meant to prompt questions worth asking, not to answer them. Nothing here creates an attorney-client relationship; that starts with a signed engagement letter.</p>
+    </div>
+    <div class="card">
+      <h2 id="probTitle">What California probate would charge today</h2>
+      <p id="probIntro"></p>
+      <p id="nonCaNotice" style="display:none">The numbers below assume California law, and you told us California is not your legal home. Every state handles this differently, so treat this as a rough illustration of the kind of cost a trust avoids, not your actual number. We will figure out what actually applies to you on the call, including whether California rules apply anyway because of a business, property, or prior domicile here.</p>
+      <div id="probNumbers">
+      <table id="probTable">
+        <thead><tr><th></th><th id="colA">Home outside a trust</th><th id="colB">Home in a funded living trust</th></tr></thead>
+        <tbody>
+          <tr><td>Value the court charges on</td><td id="pe">$0</td><td>$0</td></tr>
+          <tr><td>Attorney and executor fees set by statute</td><td class="big" id="pf">$0</td><td class="big">$0</td></tr>
+          <tr><td>Time before the family receives anything</td><td>12 to 24 months</td><td>Weeks</td></tr>
+        </tbody>
+      </table>
+      <p class="fine" id="probFine">California Probate Code section 10810; court, appraisal, publication, and bond costs are additional. Based on the home value you selected.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h2>What fixing it looks like</h2>
+      <ul id="fixList" class="fixlist"></ul>
+      <p id="fixNote" class="fine"></p>
+      <p class="fine">This is not a quote. It is what plans like this typically run and typically include: the trust, will, powers of attorney, health care directive, the deed, and a written confirmation that everything has been transferred into the trust. Your actual price is confirmed in writing at the design meeting, before any work begins and before you sign anything.</p>
+    </div>
+    <div class="card">
+      <h2>Talk it through, free, 45 minutes</h2>
+      <p>Evenings and Saturdays, in person or by video. We go through your answers, you leave with a written one-page summary, and there is nothing to buy in the meeting.</p>
+      <form id="leadForm" novalidate>
+        <div class="row">
+          <div class="field"><label for="name">Your name</label><input id="name" type="text" autocomplete="name"><div class="err">Please enter your name.</div></div>
+          <div class="field"><label for="phone">Mobile</label><input id="phone" type="tel" inputmode="tel" autocomplete="tel"><div class="err">Please enter a mobile number, digits only.</div></div>
+          <div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="email"><div class="err">That email does not look right.</div></div>
+          <div class="field"><label for="when">Best time</label><select id="when"><option>Weekday evening</option><option>Saturday morning</option><option>Saturday afternoon</option><option>Either</option></select></div>
+          <div class="field full"><label for="ref">Who suggested this, if anyone</label><input id="ref" type="text"></div>
+          <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" type="text" tabindex="-1" autocomplete="off"></div>
+          <div class="full"><label class="plain"><input type="checkbox" id="consent" checked> Include my answers above so the meeting can start from them.</label></div>
+          <div class="full"><button class="primary" type="submit" id="submitBtn">Request my free check</button></div>
+          <div class="full"><div id="formStatus" class="status" role="status" aria-live="polite"></div></div>
+        </div>
+      </form>
+      <p class="fine" id="submitPrivacy">Your details are used only to schedule the meeting. No lists, no resale.</p>
+    </div>
+    <p><button type="button" id="restart">Start over</button></p>
+  </div>
+
+  <footer>
+    <div id="footerContact"></div>
+    <p>This check is general information about California law and is not legal advice for your situation. Fees shown are the flat fees for the packages described; other work is quoted separately.</p>
+  </footer>
+</div>
+
+<script>
+  var CONFIG = { firmName: "", tagline: "", phone: "", email: "derekaearley+estatecheck@gmail.com", formEndpoint: "", familyPlan: 4000, ownerPlan: 6500, individualPlan: 2750 };
+  (function(){
+    function $(id){ return document.getElementById(id); }
+    function radio(n){ var e=document.querySelector('input[name="'+n+'"]:checked'); return e?e.value:""; }
+    function money(n){ return "$"+Math.round(n).toLocaleString("en-US"); }
+    function feeOneSide(g){ var f=0,r=g,b=[[100000,0.04],[100000,0.03],[800000,0.02],[9000000,0.01],[15000000,0.005]]; for(var i=0;i<b.length&&r>0;i++){var t=Math.min(r,b[i][0]); f+=t*b[i][1]; r-=t;} return f; }
+    function isCourtDetermined(g){ return g>25000000; }
+    function feeDisplay(g){ return isCourtDetermined(g) ? "Court-determined (over $25M)" : money(feeOneSide(g)*2); }
+    $("submitPrivacy").textContent = CONFIG.formEndpoint ? "Submitting sends your answers to our intake form so we can prepare for the call. No lists, no resale." : (CONFIG.email ? "Submitting opens an email to "+CONFIG.email+" with your answers. No lists, no resale." : "Submitting shows you a copy of your answers to send us yourself. Nothing leaves this page until you do.");
+    if (CONFIG.phone||CONFIG.email){ $("footerContact").textContent=(CONFIG.phone?"Call or text "+CONFIG.phone.replace(/(\d{3})(\d{3})(\d{4})/,"($1) $2-$3"):"")+(CONFIG.phone&&CONFIG.email?" or ":"")+(CONFIG.email?"email "+CONFIG.email:""); }
+
+    var steps=Array.prototype.slice.call(document.querySelectorAll(".step")), cur=0;
+    function show(i){ steps.forEach(function(s,k){ s.classList.toggle("active",k===i); }); cur=i;
+      Array.prototype.forEach.call($("segments").children,function(seg,k){ seg.classList.toggle("on",k<=i); });
+      $("stepTitle").textContent=steps[i].getAttribute("data-title");
+      $("stepLabel").textContent="Step "+(i+1)+" of "+steps.length;
+      $("back").hidden=(i===0); $("next").textContent=(i===steps.length-1)?"See my results":"Next"; document.documentElement.scrollTop=0; document.body.scrollTop=0; }
+    function toggles(){ $("bizq").style.display=(radio("biz")==="yes")?"":"none"; $("planq").style.display=(radio("plan")==="none")?"none":""; $("homeownedq").style.display=(radio("home")==="yes")?"":"none"; }
+    document.querySelectorAll('input[name="biz"], input[name="plan"], input[name="home"]').forEach(function(el){ el.addEventListener("change",toggles); });
+    toggles();
+
+    function assess(){
+      var items=[]; var biz=radio("biz")==="yes"; var married=radio("marital")==="married";
+      var probate=0; var hvVal=$("homeval").value; if (radio("home")==="yes" && radio("title")!=="yes" && hvVal) probate+=parseFloat(hvVal);
+      if (radio("blended")==="yes") items.push({t:"A family with more than one branch",c:"Where there has been a prior marriage or children from another relationship, a plan has to say clearly which share goes to whom. Without that, the court's default rules decide, and they often surprise people."});
+      if (radio("minors")==="yes_none") items.push({t:"No guardian named for your children",c:"A written nomination does not by itself appoint a guardian, but California courts give it significant weight. Without one, the judge decides with no guidance from you at all. If a child inherits more than $5,000 with no one named to manage it, the court also appoints someone to handle the money, separately from who raises the child."});
+      if (radio("worry")==="yes") items.push({t:"Someone who should not receive a lump sum",c:"A trust can hold that person's share and pay it out over time, or protect benefits, instead of handing it over all at once."});
+      if (radio("home")==="yes" && radio("title")!=="yes") items.push({t:"Your home is not in a living trust",c:"In California, a home outside a trust goes through probate court when the owner dies: statutory fees of "+feeDisplay(probate)+" on a home in your value range, and 12 to 24 months before the family can sell or refinance it."});
+      if (radio("oos")==="yes") items.push({t:"Property in another state",c:"That usually means a second court process in that state unless the property is held in the trust."});
+      if (biz){
+        if (radio("qual")==="yes") items.push({t:"The license is in your name",c:"If the qualifier dies or cannot work, the license is suspended until a replacement is approved. Work stops and bonding is at risk. A plan names who steps in and gives them the authority to do it."});
+        if (radio("buysell")==="none") items.push({t:"No agreement for your share of the company",c:"Without one, your family inherits a share of a business they may not be able to run, and your partners inherit a partner they did not choose. A buy-sell agreement sets the price and the exit in advance."});
+        if (radio("buysell")==="unfunded") items.push({t:"An agreement with nothing behind it",c:"A buy-sell that is not backed by insurance or savings is a promise the survivors may not be able to keep."});
+        if (radio("runner")!=="yes") items.push({t:"Nobody who could run the company tomorrow",c:"Payroll, jobs, and the license all keep moving only if someone has the authority and the instructions to act."});
+        if (radio("pg")==="yes") items.push({t:"Personal guarantees",c:"Bonds, bank lines, and leases you signed personally follow your estate. Your family and whoever manages things need to know what is owed and to whom."});
+      }
+      if (radio("benef")==="old"||radio("benef")==="unsure") items.push({t:"Beneficiary designations not checked",c:"Whoever is named on an account usually gets it, regardless of what a will or trust says. After a divorce is final, California law removes a former spouse from a will and from many payable-on-death accounts automatically, but that rule does not reach 401(k)s or pensions, where federal law requires the plan to pay whoever is on the form. A divorce still in progress changes nothing at all. Minor children named directly are the other common problem."});
+      var inc=radio("incap");
+      if (inc==="none"||inc==="some") items.push({t:"No signed incapacity documents",c:"Without a power of attorney and a health care directive, a long hospital stay can mean a court conservatorship before anyone can pay the mortgage, sign for the company, or make medical decisions."});
+      if (inc==="oos") items.push({t:"Incapacity documents from another state",c:"Banks and hospitals here often will not accept them. California versions are quick to put in place."});
+      var plan=radio("plan");
+      if (plan==="none") items.push({t:"Nothing signed",c:"The court's default rules decide who inherits, who manages, and how long it takes."});
+      if (plan==="will") items.push({t:"A will but no trust",c:"A will does not avoid probate; it is a set of instructions for the probate court. A living trust is what keeps the home and the company out of it."});
+      if (plan==="online") items.push({t:"An online trust",c:"Worth checking whether the deed was ever recorded to move the house into it, and whether it says anything about the company. Often it does neither."});
+      var ev=["e_marriage","e_child","e_biz","e_move","e_ten"].filter(function(i){return $(i).checked;}).length;
+      if (plan!=="none" && ev>0) items.push({t:"A plan that predates big changes",c:"Marriages, children, a business, a move, or a decade of law changes usually mean the plan needs to be updated rather than patched."});
+      var pkg, price;
+      if (biz){ pkg="Business-owner plan"; price=CONFIG.ownerPlan; }
+      else if (married || radio("minors")!=="no"){ pkg="Family plan"; price=CONFIG.familyPlan; }
+      else { pkg="Individual plan"; price=CONFIG.individualPlan; }
+      return {items:items, probate:probate, fee:feeOneSide(probate)*2, pkg:pkg, price:price};
+    }
+
+    function results(){
+      var a=assess(); var box=$("items"); box.innerHTML="";
+      if (!a.items.length){ box.innerHTML='<p class="good">Nothing stands out from your answers. A review every three years, or after any major change, keeps it that way.</p>'; }
+      a.items.forEach(function(x){ var d=document.createElement("div"); d.className="item"; var b=document.createElement("b"); b.textContent=x.t; d.appendChild(b); d.appendChild(document.createTextNode(x.c)); box.appendChild(d); });
+      if (radio("domicile")!=="yes" && a.items.length){ var note=document.createElement("p"); note.className="fine"; note.textContent="Some of the specifics above, including statute citations and dollar figures, are written for California. The underlying pattern (no guardian named, an unfunded agreement, and so on) is common everywhere, but the exact rule where you live may differ."; box.appendChild(note); }
+      var dom=radio("domicile");
+      var hvRaw=$("homeval").value, hv=hvRaw?parseFloat(hvRaw):0, homeYes=(radio("home")==="yes"), t=radio("title");
+      if (dom!=="yes"){
+        $("nonCaNotice").style.display=""; $("probNumbers").style.display="none";
+        $("probTitle").textContent="What California probate would charge, for comparison";
+        $("probIntro").textContent="";
+      } else {
+        $("nonCaNotice").style.display="none"; $("probNumbers").style.display="";
+        if (!homeYes){
+          $("probTitle").textContent="What California probate charges when there is no trust";
+          $("probIntro").textContent="You told us you do not own a home, so the largest driver of probate cost does not apply today. Probate can still apply to other assets without a named beneficiary once they total more than $208,850 (the current California personal-property threshold, adjusted every three years), and it applies to a home the moment you buy one unless it is titled in a trust. For scale, this is what the court charges on a home in the range you selected:";
+          $("colA").textContent="A home outside a trust"; $("colB").textContent="The same home in a funded trust";
+          $("pe").textContent=money(hv); $("pf").textContent=feeDisplay(hv);
+        } else if (t==="yes"){
+          $("probTitle").textContent="What your trust is saving you";
+          $("probIntro").textContent="You told us your home is titled in a living trust. These are the fees a home in your value range would face without one, which is what a funded trust avoids, provided the deed was actually recorded into the trust and the trust is kept current.";
+          $("colA").textContent="If the home were outside the trust"; $("colB").textContent="In your funded trust";
+          $("pe").textContent=money(hv); $("pf").textContent=feeDisplay(hv);
+        } else {
+          $("probTitle").textContent="What California probate would charge today";
+          $("probIntro").textContent=(t==="unsure"?"You were not sure whether the home is titled in a trust. If it is not, the probate court sets the fees by formula on the gross value, before the mortgage:":"Because the home is not in a living trust, the probate court sets the fees by formula on the gross value, before the mortgage:");
+          $("colA").textContent="Home outside a trust"; $("colB").textContent="Home in a funded living trust";
+          $("pe").textContent=money(a.probate); $("pf").textContent=feeDisplay(a.probate);
+        }
+      }
+      var priceNote=(dom!=="yes") ? " We will confirm pricing once we know which state's rules actually apply to you." : " This is not a quote; the price is confirmed in writing after we see your full picture.";
+      var fixItems;
+      if (a.pkg==="Business-owner plan"){
+        fixItems=[
+          "Move your ownership share of the company into the trust, so it is not stuck in probate with everything else",
+          "Name who has the authority to keep signing contracts, meeting payroll, and running the license if you cannot",
+          "Connect that authority to your buy-sell arrangement with any partners, and fund it if it is not already funded",
+          "Include the full trust package below for you and your family",
+          "A living trust that holds your home and other major assets",
+          "A will that names a guardian for your children, if you have any",
+          "Powers of attorney and a health care directive naming who can act for you",
+          "The deed work to actually move your home into the trust",
+          "Written confirmation once everything is retitled, not just signed"
+        ];
+      } else if (a.pkg==="Family plan"){
+        fixItems=[
+          "A living trust that holds your home and other major assets",
+          "A will that names a guardian for your children, if you have any",
+          "Powers of attorney and a health care directive naming who can act for you",
+          "The deed work to actually move your home into the trust",
+          "Written confirmation once everything is retitled, not just signed"
+        ];
+      } else {
+        fixItems=[
+          "A living trust that holds your major assets",
+          "Powers of attorney and a health care directive naming who can act for you",
+          "The deed work to move your home into the trust",
+          "Written confirmation once it is actually done"
+        ];
+      }
+      $("fixList").innerHTML="";
+      fixItems.forEach(function(t){ var li=document.createElement("li"); li.textContent=t; $("fixList").appendChild(li); });
+      $("fixNote").textContent="Everything is confirmed in writing before any drafting starts."+priceNote;
+      $("stepcard").style.display="none";
+      $("results").classList.add("active"); document.documentElement.scrollTop=0; document.body.scrollTop=0;
+      return a;
+    }
+    function isVisible(el){ var p=el; while(p && p!==document.body){ if (p.style && p.style.display==="none") return false; p=p.parentElement; } return true; }
+    function isAnswered(q){
+      var name=q.getAttribute("data-group");
+      var sel=q.querySelector("select");
+      if (sel) return sel.value!=="";
+      var checked=q.querySelector('input[name="'+name+'"]:checked');
+      return !!checked;
+    }
+    function validateStep(i){
+      var qs=steps[i].querySelectorAll(".q[data-group]");
+      var firstBad=null;
+      qs.forEach(function(q){
+        q.classList.remove("invalid-q");
+        if (!isVisible(q)) return;
+        if (!isAnswered(q)){ q.classList.add("invalid-q"); if(!firstBad) firstBad=q; }
+      });
+      return firstBad;
+    }
+    $("next").addEventListener("click", function(){
+      var bad=validateStep(cur);
+      if (bad){ $("stepErr").textContent="Please answer every question on this page before continuing."; if (typeof bad.scrollIntoView === "function") { bad.scrollIntoView({block:"center"}); } return; }
+      $("stepErr").textContent="";
+      if (cur<steps.length-1) show(cur+1); else results();
+    });
+    $("back").addEventListener("click", function(){ if (cur>0) show(cur-1); });
+    $("restart").addEventListener("click", function(){ window.location.reload(); });
+
+    function answersText(){
+      var a=assess(); var lines=["Free check request from the online estate check", "Package suggested: "+a.pkg+" "+money(a.price), "Probate estimate: "+money(a.fee)+" on "+money(a.probate), "Items flagged: "+(a.items.map(function(x){return x.t;}).join("; ")||"none")];
+      ["domicile","marital","blended","minors","worry","home","title","oos","biz","qual","buysell","runner","pg","benef","incap","plan"].forEach(function(n){ var v=radio(n); if (v) lines.push(n+": "+v); });
+      lines.push("home value bucket: "+$("homeval").options[$("homeval").selectedIndex].text);
+      return lines.join("\n");
+    }
+    function setInvalid(id,bad){ var f=$(id).closest(".field"); if(f) f.classList.toggle("invalid",bad); return bad; }
+    function showStatus(kind,html){ var s=$("formStatus"); s.className="status "+kind; s.innerHTML=html; }
+    function fallback(p){ var text=p.summary; var ta=document.createElement("textarea"); ta.readOnly=true; ta.value=text; var msg;
+      var href = CONFIG.email ? "mailto:"+CONFIG.email+"?subject="+encodeURIComponent("Free check request: "+p.name)+"&body="+encodeURIComponent(text) : "";
+      var tooLongForMailto = href.length > 1800;
+      if (CONFIG.email && !tooLongForMailto){
+        msg='Your email app should open with your request. If it did not, <a href="'+href+'">tap here</a> or copy the text below and send it to us.';
+        try{ window.location.href=href; }catch(e){}
+      } else if (CONFIG.email && tooLongForMailto){
+        msg='There is too much here for an email link to carry reliably. Copy the text below and paste it into an email to '+CONFIG.email+', or send it by text.';
+      } else {
+        msg="Copy the text below and send it to us by text or email, and we will reply the same day to set a time.";
+      }
+      showStatus("ok",msg); $("formStatus").appendChild(ta); }
+    $("leadForm").addEventListener("submit", function(ev){
+      ev.preventDefault(); if ($("website").value) return;
+      var bad=false; bad=setInvalid("name",$("name").value.trim().length<2)||bad; bad=setInvalid("phone",$("phone").value.replace(/\D/g,"").length<7||$("phone").value.replace(/\D/g,"").length>15)||bad;
+      var em=$("email").value.trim(); bad=setInvalid("email",em.length>0&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))||bad;
+      if (bad){ showStatus("warn","Please fix the highlighted fields."); return; }
+      var p={ name:$("name").value.trim(), phone:$("phone").value.trim(), email:em, when:$("when").value, referrer:$("ref").value.trim(), page:location.href };
+      p.summary="Name: "+p.name+"\nMobile: "+p.phone+"\nEmail: "+p.email+"\nBest time: "+p.when+"\nSuggested by: "+p.referrer+"\n\n"+($("consent").checked?answersText():"Answers not included");
+      var btn=$("submitBtn"); btn.disabled=true;
+      if (CONFIG.formEndpoint){ fetch(CONFIG.formEndpoint,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(p)}).then(function(r){ if(!r.ok) throw new Error("status "+r.status); showStatus("ok","Got it. We will text you today to set a time."); $("leadForm").reset(); }).catch(function(){ fallback(p); }).finally(function(){ btn.disabled=false; }); }
+      else { fallback(p); btn.disabled=false; }
+    });
+    show(0);
+  })();
+</script>
+</body>
+</html>
