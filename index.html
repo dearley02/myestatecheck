@@ -6,8 +6,21 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<title>Five-minute business and estate check</title>
-<meta name="description" content="Answer twelve questions and see what would happen to your home, your company, and your family if you were out for six months or gone tomorrow. Private, nothing is stored.">
+<title>Business &amp; Estate Check</title>
+<meta name="description" content="Thirteen questions, about five minutes. See what a lawyer would want to look at, and what California probate would charge if nothing is in place. Your answers are not saved unless you submit.">
+
+<!-- Link previews and in-app browsers read these; without them some show the filename -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Business &amp; Estate Check">
+<meta property="og:description" content="Thirteen questions, about five minutes. What happens to your home, your company, and your family if you are out for six months, or gone tomorrow?">
+<meta property="og:url" content="https://dearley02.github.io/myestatecheck/">
+<meta property="og:site_name" content="Business &amp; Estate Check">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Business &amp; Estate Check">
+<meta name="twitter:description" content="Thirteen questions, about five minutes. What happens to your home, your company, and your family if you are out for six months, or gone tomorrow?">
+<meta name="apple-mobile-web-app-title" content="Business &amp; Estate Check">
+<meta name="application-name" content="Business &amp; Estate Check">
+<meta name="theme-color" content="#14213D">
 <style>
   :root {
     --ink:#14213D; --paper:#FFFFFF; --line:#DADFE6; --slate:#5B6472; --wash:#F5F6F8;
@@ -31,7 +44,7 @@
   .chips span { display:inline-flex; align-items:center; }
   .chips span + span::before { content:""; display:inline-block; width:3px; height:3px; border-radius:50%; background:var(--line); margin-right:14px; flex-shrink:0; }
   .wrap { width:min(680px,92vw); margin:0 auto; padding:28px 0 60px; }
-  .hero { margin-bottom:28px; }
+  .hero { margin-bottom:22px; }
   h1 { font-family:var(--serif); font-weight:600; font-size:clamp(24px,5.2vw,32px); line-height:1.28; margin:0 0 12px; color:var(--ink); letter-spacing:-0.01em; max-width:19ch; }
   .lede { color:var(--slate); margin:0; font-size:16px; max-width:58ch; line-height:1.6; }
   .stepcard { border:1px solid var(--line); border-radius:10px; padding:24px 24px 20px; margin:0; background:var(--paper); }
@@ -100,14 +113,24 @@
   footer { margin-top:36px; padding-top:16px; border-top:1px solid var(--line); font-size:13px; color:var(--slate); line-height:1.6; }
   @media (max-width:640px) {
     form .row { grid-template-columns:1fr; }
-    .wrap { padding-bottom:110px; }
+    .wrap { padding:16px 0 96px; }
+    .topbar .in { padding:12px 0; }
+    h1 { font-size:21px; line-height:1.3; margin:0 0 8px; max-width:none; }
+    .lede { font-size:15px; line-height:1.5; }
+    .hero { margin-bottom:16px; }
+    .stepcard { padding:18px 16px 14px; }
+    .stephead { margin-bottom:10px; }
+    .segments { margin:0 0 16px; }
+    .q { margin:0 0 20px; }
     .nav {
       position:fixed; left:0; right:0; bottom:0; margin:0; z-index:20;
+      display:flex; gap:10px;
       background:var(--paper); border-top:1px solid var(--line);
-      padding:12px 5vw calc(12px + env(safe-area-inset-bottom));
-      max-width:680px; margin-left:auto; margin-right:auto;
+      padding:10px 4vw calc(10px + env(safe-area-inset-bottom));
+      box-shadow:0 -2px 12px rgba(20,33,61,0.06);
     }
-    .stepcard { padding:20px 18px 16px; }
+    .nav button { flex:1; padding:14px 18px; }
+    .nav button#back { flex:0 0 34%; }
     .card, .results .card:last-of-type { padding-left:0; padding-right:0; }
     .results .card:last-of-type { padding:20px 18px; }
   }
@@ -118,7 +141,7 @@
 <div class="wrap">
   <div class="hero">
     <h1>What happens to your home, your company, and your family if you are out for six months, or gone tomorrow?</h1>
-    <p class="lede">Answer thirteen questions and see what a lawyer would want to look at, and what California's probate court charges when nothing is in place. Your answers live in this page only; nothing is saved or sent anywhere unless you submit the form at the end.</p>
+    <p class="lede">See what a lawyer would want to look at, and what California probate would charge if nothing is in place.</p>
   </div>
 
   <div class="stepcard" id="stepcard">
