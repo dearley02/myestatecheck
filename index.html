@@ -232,7 +232,6 @@
       <h2>What fixing it looks like</h2>
       <ul id="fixList" class="fixlist"></ul>
       <p id="fixNote" class="fine"></p>
-      <p class="fine">This is not a quote. It is what plans like this typically run and typically include: the trust, will, powers of attorney, health care directive, the deed, and a written confirmation that everything has been transferred into the trust. Your actual price is confirmed in writing at the design meeting, before any work begins and before you sign anything.</p>
     </div>
     <div class="card">
       <h2>Talk it through, free, 45 minutes</h2>
@@ -346,35 +345,19 @@
         }
       }
       var priceNote=(dom!=="yes") ? " We will confirm pricing once we know which state's rules actually apply to you." : " This is not a quote; the price is confirmed in writing after we see your full picture.";
-      var fixItems;
+      var ownsHome = radio("home")==="yes";
+      var hasKids = radio("minors")==="yes_named" || radio("minors")==="yes_none";
+      var fixItems = [];
       if (a.pkg==="Business-owner plan"){
-        fixItems=[
-          "Move your ownership share of the company into the trust, so it is not stuck in probate with everything else",
-          "Name who has the authority to keep signing contracts, meeting payroll, and running the license if you cannot",
-          "Connect that authority to your buy-sell arrangement with any partners, and fund it if it is not already funded",
-          "Include the full trust package below for you and your family",
-          "A living trust that holds your home and other major assets",
-          "A will that names a guardian for your children, if you have any",
-          "Powers of attorney and a health care directive naming who can act for you",
-          "The deed work to actually move your home into the trust",
-          "Written confirmation once everything is retitled, not just signed"
-        ];
-      } else if (a.pkg==="Family plan"){
-        fixItems=[
-          "A living trust that holds your home and other major assets",
-          "A will that names a guardian for your children, if you have any",
-          "Powers of attorney and a health care directive naming who can act for you",
-          "The deed work to actually move your home into the trust",
-          "Written confirmation once everything is retitled, not just signed"
-        ];
-      } else {
-        fixItems=[
-          "A living trust that holds your major assets",
-          "Powers of attorney and a health care directive naming who can act for you",
-          "The deed work to move your home into the trust",
-          "Written confirmation once it is actually done"
-        ];
+        fixItems.push("Move your ownership share of the company into the trust, so it is not stuck in probate with everything else");
+        fixItems.push("Name who has the authority to keep signing contracts, meeting payroll, and running the license if you cannot");
+        fixItems.push("Connect that authority to your buy-sell arrangement with any partners, and fund it if it is not already funded");
       }
+      fixItems.push(ownsHome ? "A living trust that holds your home and other major assets" : "A living trust that holds your major assets");
+      if (hasKids) fixItems.push("A will that names a guardian for your children");
+      fixItems.push("Powers of attorney and a health care directive naming who can act for you");
+      if (ownsHome) fixItems.push("The deed work to actually move your home into the trust");
+      fixItems.push(ownsHome ? "Written confirmation once everything is retitled, not just signed" : "Written confirmation once everything is retitled and funded, not just signed");
       $("fixList").innerHTML="";
       fixItems.forEach(function(t){ var li=document.createElement("li"); li.textContent=t; $("fixList").appendChild(li); });
       $("fixNote").textContent="Everything is confirmed in writing before any drafting starts."+priceNote;
