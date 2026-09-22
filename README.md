@@ -33,4 +33,4 @@ Open http://127.0.0.1:8080/
 - “Submit request” stays in the browser and shows “Preview only — not sent.” It does not email, store, or transmit the answers.
 - The page has no phone number, email address, street address, map, chat, or calendar.
 
-The fee panel is labeled as a draft. The amounts are not approved as live prices.
+The fee panel shows approved proposed fees — preview only, not published: $2,500 individual, $3,500 couple, and $750 existing-plan review. The site is not published, and booking is not live.

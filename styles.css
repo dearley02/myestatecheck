@@ -280,6 +280,8 @@ section { padding: 40px 0; border-top: 1px solid var(--line); }
   color: var(--muted);
 }
 
+.fee-note + .fee-note { margin-top: 6px; }
+
 .fees > p:not(.badge) { margin: 0 0 10px; font-size: 15px; color: var(--muted); }
 
 .fees > p:last-child { margin-bottom: 0; }
