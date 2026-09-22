@@ -1,66 +1,36 @@
-# myestatecheck
+# Orange County Estate Plans — private preview
 
-A thirteen-question self-assessment. Someone answers questions about their
-family, home, business, and paperwork, and gets back a plain-language summary
-of what an attorney would want to look at, an illustration of what California
-statutory probate fees would run, and an option to request a call.
+Unpublished private preview of a practice website. This branch is for review only. It is not a live site, and nothing here accepts clients.
 
-Live at: https://dearley02.github.io/myestatecheck/
+Orange County Estate Plans is a working label on this preview. It is not presented as a verified trade name.
 
-## Publishing
+## Do not publish
 
-This repository is a single static page. No build step, no dependencies.
+- Do not merge this branch in order to update the public GitHub Pages site.
+- Do not enable GitHub Pages, a custom domain, or any other host from this branch.
+- Do not change DNS for OrangeCountyEstatePlans.com. Ownership and DNS are unverified.
+- Do not connect the inquiry form to email, a form vendor, a spreadsheet, or a booking tool.
+- Do not add a phone number, street address, map, or personal name to this preview.
 
-1. Settings → Pages
-2. Source: **Deploy from a branch**
-3. Branch: `main`, folder: `/ (root)`
-4. Save. The site is live in about a minute.
+`main` still has a separate self-assessment page (Business & Estate Check). This branch replaces that page with the practice preview. Leave `main` as it is until there is a separate decision to publish.
 
-To point a custom domain at it later, add the domain under Settings → Pages →
-Custom domain and create a CNAME record at your registrar per GitHub's
-instructions.
+## Run locally
 
-## Configuration
+No install, no build, and no environment variables.
 
-Near the bottom of `index.html`:
-
-```js
-var CONFIG = { firmName: "", tagline: "", phone: "",
-               email: "derekaearley+estatecheck@gmail.com",
-               formEndpoint: "", familyPlan: 4000, ownerPlan: 6500,
-               individualPlan: 2750 };
+```bash
+python3 -m http.server 8080
 ```
 
-| Key | Effect |
-|---|---|
-| `email` | Submissions open the visitor's mail client addressed here. |
-| `formEndpoint` | If set to a form-service URL, submissions POST there as JSON instead of opening a mail client. |
-| `firmName`, `tagline` | Deliberately blank in this version. Setting them adds a header identity. |
-| `familyPlan`, `ownerPlan`, `individualPlan` | Drive which package is recommended. No dollar figure is shown to the visitor. |
+Open http://127.0.0.1:8080/
 
-## How data is handled
+`index.html` is the homepage. `inquire.html` is the inquiry form. You can also open `index.html` directly in a browser.
 
-While someone answers, nothing is stored, logged, or transmitted. No
-analytics, no cookies, no local storage. The only outbound request before
-submission is the webfont load from Google Fonts.
+## Nonfunctional contact points
 
-On submit, with `email` set, the visitor's own mail client opens with their
-answers in the body; the data path is an ordinary email from them to the
-configured address. With `formEndpoint` set instead, answers are POSTed to
-that third-party service, which then holds them. The page states which of
-these applies, and the questionnaire's sensitive answers are attached only
-if the visitor leaves the consent box checked.
+- “Request a 15-minute introductory call” only opens `inquire.html`. It does not book a call.
+- “Request an existing-plan review” only opens the same form with existing-plan review selected. It does not book a call.
+- “Submit request (preview only)” stays in the browser and shows “Preview only — not sent.” It does not email, store, or transmit the answers.
+- The page has no phone number, email address, street address, map, chat, or calendar.
 
-## Status and caveats
-
-- This is an unbranded test version. No firm name appears anywhere.
-- **Not yet reviewed by a licensed attorney.** That review should happen
-  before the tool is used with anyone who is not a test participant.
-- The configured email address is visible in page source, which is required
-  for the mail link to function, and this repository is public.
-- Statutory fee figures were verified against California Probate Code
-  sections 10800 and 10810 in September 2026. Re-check before relying on them.
-
-## License
-
-Proprietary, all rights reserved. See `LICENSE.md`.
+The fee panel is labeled as a draft. The amounts are not approved as live prices.

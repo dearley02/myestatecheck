@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Request a call — Orange County Estate Plans (private preview)</title>
+  <meta name="description" content="Private unpublished preview. The inquiry form does not send a message or book a call.">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#F7F8FA">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <p class="banner">Private preview — not published. Fees and contact details are draft.</p>
+  <div class="wrap">
+    <header class="site">
+      <a class="wordmark" href="index.html">Orange County Estate Plans</a>
+      <nav aria-label="Sections">
+        <a href="index.html#services">Services</a>
+        <a href="index.html#process">Process</a>
+        <a href="inquire.html" aria-current="page">Inquire</a>
+      </nav>
+    </header>
+
+    <main id="main" class="form-col">
+      <h1 class="page-title">Request an introductory call</h1>
+      <p class="lead">Tell us how to reach you. Keep this form short.</p>
+
+      <noscript>
+        <p class="notice">JavaScript is off, so this preview cannot show a confirmation. The form still does not email anyone or book a call.</p>
+      </noscript>
+
+      <form id="inquiry" method="post" action="inquire.html" novalidate onsubmit="event.preventDefault()">
+        <div class="field">
+          <label for="name">Name <span class="req">(required)</span></label>
+          <input id="name" name="name" type="text" autocomplete="name" required aria-required="true" aria-describedby="name-error">
+          <p id="name-error" class="error" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="email">Email <span class="req">(required)</span></label>
+          <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required aria-required="true" aria-describedby="email-error">
+          <p id="email-error" class="error" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone <span class="optional">(optional)</span></label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" aria-describedby="phone-hint phone-error">
+          <p id="phone-hint" class="hint">Add a number only if you prefer a phone call.</p>
+          <p id="phone-error" class="error" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="county">County <span class="req">(required)</span></label>
+          <select id="county" name="county" required aria-required="true" aria-describedby="county-error">
+            <option value="">Select a county</option>
+            <option value="orange">Orange County</option>
+            <option value="san-diego">San Diego</option>
+            <option value="other">Other</option>
+          </select>
+          <p id="county-error" class="error" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="interest">New plan or existing-plan review <span class="req">(required)</span></label>
+          <select id="interest" name="interest" required aria-required="true" aria-describedby="interest-error">
+            <option value="">Select one</option>
+            <option value="new">New plan</option>
+            <option value="review">Existing-plan review</option>
+          </select>
+          <p id="interest-error" class="error" hidden></p>
+        </div>
+
+        <div class="field">
+          <label for="pref">Preferred contact method <span class="req">(required)</span></label>
+          <select id="pref" name="pref" required aria-required="true" aria-describedby="pref-error">
+            <option value="">Select one</option>
+            <option value="email">Email</option>
+            <option value="phone">Phone</option>
+          </select>
+          <p id="pref-error" class="error" hidden></p>
+        </div>
+
+        <p class="notice" id="inquiry-notice">Please do not send confidential information. Submitting this form does not create an attorney-client relationship.</p>
+
+        <button class="btn" type="submit" aria-describedby="inquiry-notice">Submit request (preview only)</button>
+        <div id="form-status" class="status" role="status" aria-live="polite" tabindex="-1" hidden></div>
+      </form>
+
+      <p><a class="back" href="index.html">Back to the preview home</a></p>
+    </main>
+
+    <footer>
+      <p>Serving Orange County and San Diego.</p>
+      <p>Private preview. Not published. This form does not send a message or book a call.</p>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      var form = document.getElementById("inquiry");
+      var statusEl = document.getElementById("form-status");
+      var interest = document.getElementById("interest");
+      var params = new URLSearchParams(window.location.search);
+
+      if (params.get("matter") === "review") {
+        interest.value = "review";
+      }
+
+      function digits(value) {
+        return value.replace(/\D/g, "");
+      }
+
+      function showError(input, message) {
+        var err = document.getElementById(input.id + "-error");
+        input.setAttribute("aria-invalid", "true");
+        err.hidden = false;
+        err.textContent = message;
+      }
+
+      function clearError(input) {
+        var err = document.getElementById(input.id + "-error");
+        input.removeAttribute("aria-invalid");
+        err.hidden = true;
+        err.textContent = "";
+      }
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        var name = document.getElementById("name");
+        var email = document.getElementById("email");
+        var phone = document.getElementById("phone");
+        var county = document.getElementById("county");
+        var pref = document.getElementById("pref");
+        var fields = [name, email, phone, county, interest, pref];
+        var first = null;
+        var phoneDigits = digits(phone.value);
+
+        fields.forEach(clearError);
+        statusEl.hidden = true;
+        statusEl.textContent = "";
+
+        function fail(input, message) {
+          showError(input, message);
+          if (!first) first = input;
+        }
+
+        if (name.value.trim().length < 2) fail(name, "Enter your name.");
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+          fail(email, "Enter an email address.");
+        }
+        if (!county.value) fail(county, "Select a county.");
+        if (!interest.value) fail(interest, "Select new plan or existing-plan review.");
+        if (!pref.value) fail(pref, "Select a preferred contact method.");
+        if (pref.value === "phone" && (phoneDigits.length < 7 || phoneDigits.length > 15)) {
+          fail(phone, "Enter a phone number, or choose email instead.");
+        } else if (phone.value.trim() && (phoneDigits.length < 7 || phoneDigits.length > 15)) {
+          fail(phone, "Enter a phone number with at least 7 digits, or leave it blank.");
+        }
+
+        if (first) {
+          first.focus();
+          return;
+        }
+
+        statusEl.hidden = false;
+        statusEl.textContent = "Preview only — not sent. Nothing was emailed, stored, or booked.";
+        statusEl.focus();
+        if (typeof statusEl.scrollIntoView === "function") {
+          statusEl.scrollIntoView({ block: "nearest" });
+        }
+      });
+    }());
+  </script>
+</body>
+</html>
