@@ -1,12 +1,12 @@
 :root {
-  --bg: #F7F8FA;
+  --bg: #F7F5F1;
   --surface: #FFFFFF;
   --ink: #1C2430;
   --muted: #5B6573;
-  --line: #D5DBE2;
+  --line: #D8D2C8;
   --accent: #2F4A3C;
   --accent-hover: #243B30;
-  --draft-ink: #6B5218;
+  --draft-ink: #8A6A1F;
   --draft-bg: #F4E8C6;
   --error: #7A241E;
   --status-bg: #EEF2EF;
@@ -71,8 +71,8 @@ select:focus-visible {
   z-index: 5;
   margin: 0;
   background: var(--ink);
-  color: #F7F8FA;
-  font-size: 14px;
+  color: #F7F5F1;
+  font-size: 13px;
   line-height: 1.4;
   text-align: center;
   padding: 10px 16px;
@@ -118,7 +118,7 @@ nav {
 nav a {
   color: var(--muted);
   text-decoration: none;
-  font-size: 15px;
+  font-size: 14px;
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -132,14 +132,13 @@ nav a[aria-current="page"] {
   text-underline-offset: 3px;
 }
 
-.hero { padding: 40px 0 8px; }
+.hero { padding: 40px 0 28px; }
 
 h1 {
   font-family: var(--serif);
-  font-weight: 500;
-  font-size: clamp(1.85rem, 4.6vw, 2.45rem);
-  line-height: 1.22;
-  letter-spacing: -0.01em;
+  font-weight: 400;
+  font-size: clamp(1.85rem, 4.5vw, 2.45rem);
+  line-height: 1.2;
   margin: 0 0 16px;
   text-wrap: balance;
 }
@@ -147,7 +146,7 @@ h1 {
 h2 {
   font-size: 1.15rem;
   font-weight: 600;
-  margin: 0 0 16px;
+  margin: 0 0 20px;
   letter-spacing: 0.01em;
 }
 
@@ -169,22 +168,22 @@ h2 {
   background: var(--accent);
   color: #fff;
   text-decoration: none;
-  padding: 12px 18px;
+  padding: 14px 22px;
   border-radius: 6px;
   font: inherit;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  border: 2px solid var(--accent);
+  border: none;
   cursor: pointer;
-  min-height: 48px;
+  min-height: 44px;
 }
 
-.btn:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; }
+.btn:hover { background: var(--accent-hover); color: #fff; }
 
 .btn-note {
   display: block;
   margin: 10px 0 0;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--muted);
 }
 
@@ -195,31 +194,30 @@ section { padding: 40px 0; border-top: 1px solid var(--line); }
   padding: 0;
   margin: 0;
   display: grid;
-  gap: 12px;
+  gap: 14px;
 }
 
 .steps li {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 14px 16px;
+  padding: 16px 18px;
   display: grid;
-  grid-template-columns: 32px 1fr;
+  grid-template-columns: 28px 1fr;
   gap: 12px;
   align-items: center;
-  min-height: 52px;
 }
 
 .num {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: var(--bg);
   border: 1px solid var(--line);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--accent);
 }
@@ -240,10 +238,10 @@ section { padding: 40px 0; border-top: 1px solid var(--line); }
   margin: 0 0 16px;
   background: var(--draft-bg);
   color: var(--draft-ink);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 1.35;
-  padding: 6px 10px;
+  padding: 4px 10px;
   border-radius: 999px;
 }
 
@@ -264,26 +262,27 @@ section { padding: 40px 0; border-top: 1px solid var(--line); }
 
 .fee-card h3 {
   margin: 0;
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.price {
-  margin: 6px 0 0;
-  font-size: 1.45rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
-
-.fee-note {
-  margin: 8px 0 0;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 400;
   color: var(--muted);
 }
 
-.fees p { margin: 0 0 12px; }
+.price {
+  margin: 4px 0 2px;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--ink);
+}
 
-.fees p:last-child { margin-bottom: 0; }
+.fee-note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.fees > p:not(.badge) { margin: 0 0 10px; font-size: 15px; color: var(--muted); }
+
+.fees > p:last-child { margin-bottom: 0; }
 
 .review-link {
   margin: 16px 0 0;
@@ -296,7 +295,7 @@ details {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 4px 16px 12px;
+  padding: 8px 16px 14px;
   margin: 0 0 10px;
 }
 
@@ -325,20 +324,25 @@ details .btn-note { margin-top: 0; }
   font-size: 1.05rem;
 }
 
-.page-title { margin: 36px 0 8px; font-size: 1.7rem; font-weight: 600; }
+.page-title {
+  margin: 40px 0 8px;
+  font-family: var(--sans);
+  font-size: 1.65rem;
+  font-weight: 600;
+}
 
 form {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 20px;
+  padding: 24px;
 }
 
 .field { margin: 0 0 16px; }
 
 label {
   display: block;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   margin: 0 0 6px;
 }
@@ -416,8 +420,8 @@ option { color: var(--ink); }
 }
 
 footer {
-  padding: 28px 0 calc(40px + env(safe-area-inset-bottom));
-  font-size: 14px;
+  padding: 32px 0 calc(48px + env(safe-area-inset-bottom));
+  font-size: 13px;
   color: var(--muted);
   text-align: center;
   border-top: 1px solid var(--line);
@@ -432,8 +436,8 @@ footer p:last-child { margin-bottom: 0; }
 }
 
 @media (min-width: 720px) {
-  .hero { padding: 56px 0 16px; }
-  section { padding: 56px 0; }
+  .hero { padding: 56px 0 40px; }
+  section { padding: 48px 0; }
   .btn { display: inline-flex; width: auto; min-width: 280px; }
   form .btn { display: flex; width: 100%; min-width: 0; }
   .cta-band { padding: 32px 28px; }

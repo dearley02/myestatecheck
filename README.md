@@ -30,7 +30,7 @@ Open http://127.0.0.1:8080/
 
 - “Request a 15-minute introductory call” only opens `inquire.html`. It does not book a call.
 - “Request an existing-plan review” only opens the same form with existing-plan review selected. It does not book a call.
-- “Submit request (preview only)” stays in the browser and shows “Preview only — not sent.” It does not email, store, or transmit the answers.
+- “Submit request” stays in the browser and shows “Preview only — not sent.” It does not email, store, or transmit the answers.
 - The page has no phone number, email address, street address, map, chat, or calendar.
 
 The fee panel is labeled as a draft. The amounts are not approved as live prices.
